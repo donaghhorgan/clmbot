@@ -2,6 +2,7 @@
   github:
     branches:
       only: main
+
 jobs:
   CloneRepo:
     resources:
@@ -12,6 +13,8 @@ jobs:
     uses: git-checkout@v1
     with:
       url: context.event.github.url
+      username: secret:GITHUB_USERNAME
+      password: secret:GITHUB_PASSWORD
   HelloWorld:
     resources:
       instance-type: C5
