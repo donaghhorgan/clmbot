@@ -1,8 +1,3 @@
-'on':
-  github:
-    branches:
-      only: main
-
 jobs:
   CloneRepo:
     resources:
@@ -12,10 +7,11 @@ jobs:
         type: volume
     uses: git-checkout@v1
     with:
-      url: context.event.github.url
-      username: secret:GITHUB_USERNAME
+      url: https://github.com/donaghhorgan/blindbot
+      username: donaghhorgan
       password: secret:GITHUB_PASSWORD
-  HelloWorld:
+
+  TrainModel:
     resources:
       instance-type: C5
     needs:
@@ -24,5 +20,9 @@ jobs:
       repo: CloneRepo.outputs.repo
     uses: script@v1
     with:
-      script: python /inputs/repo/hello.py
-      image: tensorflow/tensorflow:1.14.0-py3
+      script: |-
+        cd /input/repo
+        python -m pip install pipenv==2021.5.29
+        pipenv install
+        python -c "import torch; print(torch.__version__)"
+      image: nvcr.io/nvidia/pytorch:21.02-py3
