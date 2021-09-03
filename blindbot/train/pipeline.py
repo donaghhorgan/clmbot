@@ -35,7 +35,7 @@ class Pipeline:
         logger.info(f"Loaded data in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
-            encodings = self.tokenizer.encode(text, **self.encoding_args).squeeze()
+            encodings = self.tokenizer.encode(text, **self.encoding_args)
         logger.info(f"Encoded data in {timer.duration:.2f} seconds")
 
         with Timer() as timer:

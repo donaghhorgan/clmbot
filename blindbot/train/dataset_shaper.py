@@ -4,7 +4,6 @@ import math
 import random
 from typing import Dict, List, Tuple, TypeVar
 
-import torch
 import torch.utils.data
 from pydantic.dataclasses import dataclass
 
@@ -34,15 +33,15 @@ def split(data: List[T], p_split: float) -> Tuple[List[T], List[T]]:
 
 
 class Dataset(torch.utils.data.Dataset):
-    def __init__(self, encodings: List[torch.Tensor]):
+    def __init__(self, encodings: List[List[int]]):
         super(Dataset, self).__init__()
         self.encodings = encodings
 
     def __len__(self) -> int:
         return len(self.encodings)
 
-    def __getitem__(self, i) -> Dict[str, torch.Tensor]:
-        return {"input_ids": self.encodings[i]}
+    def __getitem__(self, i) -> List[int]:
+        return self.encodings[i]
 
 
 @dataclass(frozen=True)
@@ -50,7 +49,7 @@ class DatasetShaper:
     p_train: float
 
     def __call__(
-        self, encodings: torch.Tensor, max_seq_len: int
+        self, encodings: List[int], max_seq_len: int
     ) -> Tuple[Dataset, Dataset]:
         chunks = []
         for i in range(0, len(encodings) - max_seq_len + 1, max_seq_len):
