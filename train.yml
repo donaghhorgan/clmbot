@@ -1,5 +1,5 @@
 input:
-  path: ./data
+  path: /inputs/data
   pattern: "*.txt"
   sep: "\n"
 
@@ -18,7 +18,7 @@ model:
   parameters: {}
 
 training_args:
-  output_dir: ./results
+  output_dir: /outputs/model
   num_train_epochs: 3
   per_device_train_batch_size: 32
   per_device_eval_batch_size: 64
