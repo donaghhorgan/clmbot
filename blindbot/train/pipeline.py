@@ -1,56 +1,52 @@
-import logging
-from collections.abc import Callable
-
-from blindbot.util import Timer
-from pydantic.dataclasses import dataclass
+from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer
 
 from .config import Config
-from .stage import Encoder, Loader, Saver, Splitter, Trainer
+from .data_loader import DataLoader
+from .dataset_shaper import DatasetShaper
+from blindbot.util import Timer
+import logging
 
 logger = logging.getLogger(__name__)
 
 
-@dataclass(frozen=True)
-class Pipeline(Callable[[], None]):
-    loader: Loader
-    splitter: Splitter
-    encoder: Encoder
-    trainer: Trainer
-    saver: Saver
+class Pipeline:
+
+    def __init__(self, config: Config):
+        self.data_loader = DataLoader(**config.input.to_dict())
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            config.tokenizer.type, **config.tokenizer.parameters
+        )
+        self.encoding_args = config.encoding_args
+        self.dataset_shaper = DatasetShaper(**config.dataset.to_dict())
+        self.model = AutoModelForCausalLM.from_pretrained(
+            config.model.type, **config.model.parameters
+        )
+        self.training_args = TrainingArguments(**config.training_args)
 
     def __call__(self):
-        # Load documents
         with Timer() as timer:
-            documents = self.loader()
+            text = self.data_loader()
+        logger.info(f"Loaded data in {timer.duration:.2f} seconds")
 
-        logging.info(f"Loaded {len(documents)} in {timer:.2f} seconds")
-
-        # Split text
         with Timer() as timer:
-            train_texts, eval_texts = self.splitter(documents)
+            encodings = self.tokenizer.encode(text, **self.encoding_args).squeeze()
+        logger.info(f"Encoded data in {timer.duration:.2f} seconds")
 
-        logging.info(
-            f"Split documents into subsets of size {len(train_texts)} "
-            f"and {len(eval_texts)} in {timer:.2f} seconds"
-        )
-
-        # Encode text
         with Timer() as timer:
-            encodings = self.encoder(train_texts, eval_texts)
+            train_dataset, eval_dataset = self.dataset_shaper(encodings, self.tokenizer.model_max_length)
+        logger.info(f"Shaped dataset in {timer.duration:.2f} seconds")
 
-        logging.info(f"Encoded text in {timer:.2f} seconds")
-
-        # Train a model
         with Timer() as timer:
-            model = self.trainer(*encodings)
+            trainer = Trainer(
+                model=self.model,
+                args=self.training_args,
+                train_dataset=train_dataset,
+                eval_dataset=eval_dataset,
+            )
 
-        logging.info(f"Trained model in {timer:.2f} seconds")
+            trainer.train()
+        logger.info(f"Trained model in {timer.duration:.2f} seconds")
 
-    @classmethod
-    def from_config(cls, config: Config):
-        loader = Loader.from_config(config.input)
-        splitter = Splitter.from_config(config.split)
-        encoder = Encoder.from_config(config.encoder)
-        trainer = Trainer.from_config(config.trainer)
-
-        return Pipeline(loader, splitter, encoder, trainer)
+        with Timer() as timer:
+            trainer.save_model()
+        logger.info(f"Saved model in {timer.duration:.2f} seconds")

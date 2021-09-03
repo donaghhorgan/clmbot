@@ -7,7 +7,7 @@ from blindbot.train import Config, Pipeline
 cli = typer.Typer()
 
 CONFIG_FILE = typer.Option(
-    "config.yml",
+    "train.yml",
     "--config",
     "-c",
     help="The configuration file to use",
@@ -30,6 +30,13 @@ def train(
     logging.basicConfig(log_level)
 
     config = Config.from_yaml(config_file)
-    pipeline = Pipeline.from_config(config)
+    pipeline = Pipeline(config)
 
     pipeline()
+
+
+@cli.command(help="Deploy a model.")
+def deploy(
+    log_level: logging.LogLevel = LOG_LEVEL,
+):
+    logging.basicConfig(log_level)
