@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 import dataclasses
-from dataclasses import field
-from abc import ABC
-
 import pathlib
+from abc import ABC
+from dataclasses import field
 from typing import Dict, Any
 
 import yaml
-from pydantic.dataclasses import dataclass
 from pydantic import validator
+from pydantic.dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -60,11 +59,6 @@ class Config(BaseConfig):
 
     encoding_args: Dict[str, Any] = field(default_factory=dict)
     training_args: Dict[str, Any] = field(default_factory=dict)
-
-    @validator('encoding_args', always=True)
-    def set_default_encoding_args(cls, encoding_args: Dict[str, Any]):
-        encoding_args.setdefault("return_tensors", "pt")
-        return encoding_args
 
     @classmethod
     def from_yaml(cls, file: pathlib.Path) -> Config:

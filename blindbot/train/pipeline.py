@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer
+from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer, DataCollatorForLanguageModeling
 
 from .config import Config
 from .data_loader import DataLoader
@@ -37,11 +37,14 @@ class Pipeline:
         logger.info(f"Shaped dataset in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
+            data_collator = DataCollatorForLanguageModeling(self.tokenizer, mlm=False)
+
             trainer = Trainer(
                 model=self.model,
                 args=self.training_args,
                 train_dataset=train_dataset,
                 eval_dataset=eval_dataset,
+                data_collator=data_collator
             )
 
             trainer.train()
