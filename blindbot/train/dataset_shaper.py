@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import math
 import random
-from typing import List, Tuple, TypeVar, Dict
+from typing import Dict, List, Tuple, TypeVar
 
-from pydantic.dataclasses import dataclass
 import torch
 import torch.utils.data
+from pydantic.dataclasses import dataclass
 
 T = TypeVar("T")
 
@@ -49,10 +49,12 @@ class Dataset(torch.utils.data.Dataset):
 class DatasetShaper:
     p_train: float
 
-    def __call__(self, encodings: torch.Tensor, max_seq_len: int) -> Tuple[Dataset, Dataset]:
+    def __call__(
+        self, encodings: torch.Tensor, max_seq_len: int
+    ) -> Tuple[Dataset, Dataset]:
         chunks = []
         for i in range(0, len(encodings) - max_seq_len + 1, max_seq_len):
-            chunks.append(encodings[i: i + max_seq_len])
+            chunks.append(encodings[i : i + max_seq_len])
 
         train_encodings, eval_encodings = split(chunks, self.p_train)
 

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import logging
 import pathlib
 from typing import Dict
 
 from pydantic.dataclasses import dataclass
-import logging
 
 logger = logging.getLogger(__name__)
 

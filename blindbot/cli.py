@@ -36,7 +36,5 @@ def train(
 
 
 @cli.command(help="Deploy a model.")
-def deploy(
-    log_level: logging.LogLevel = LOG_LEVEL,
-):
+def deploy(log_level: logging.LogLevel = LOG_LEVEL,):
     logging.basicConfig(log_level)

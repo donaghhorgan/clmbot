@@ -4,7 +4,7 @@ import dataclasses
 import pathlib
 from abc import ABC
 from dataclasses import field
-from typing import Dict, Any
+from typing import Any, Dict
 
 import yaml
 from pydantic import validator
@@ -13,7 +13,6 @@ from pydantic.dataclasses import dataclass
 
 @dataclass(frozen=True)
 class BaseConfig(ABC):
-
     def to_dict(self) -> Dict[str, Any]:
         return dataclasses.asdict(self)
 

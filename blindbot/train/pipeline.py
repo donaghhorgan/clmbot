@@ -1,16 +1,22 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer, DataCollatorForLanguageModeling
+import logging
+
+from blindbot.util import Timer
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    DataCollatorForLanguageModeling,
+    Trainer,
+    TrainingArguments,
+)
 
 from .config import Config
 from .data_loader import DataLoader
 from .dataset_shaper import DatasetShaper
-from blindbot.util import Timer
-import logging
 
 logger = logging.getLogger(__name__)
 
 
 class Pipeline:
-
     def __init__(self, config: Config):
         self.data_loader = DataLoader(**config.input.to_dict())
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -33,7 +39,9 @@ class Pipeline:
         logger.info(f"Encoded data in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
-            train_dataset, eval_dataset = self.dataset_shaper(encodings, self.tokenizer.model_max_length)
+            train_dataset, eval_dataset = self.dataset_shaper(
+                encodings, self.tokenizer.model_max_length
+            )
         logger.info(f"Shaped dataset in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
@@ -44,7 +52,7 @@ class Pipeline:
                 args=self.training_args,
                 train_dataset=train_dataset,
                 eval_dataset=eval_dataset,
-                data_collator=data_collator
+                data_collator=data_collator,
             )
 
             trainer.train()
