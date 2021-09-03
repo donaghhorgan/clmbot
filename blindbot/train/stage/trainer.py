@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import field
 from typing import Any, Dict
 
@@ -28,7 +27,7 @@ class TrainerConfig:
 
 
 @dataclass(frozen=True)
-class Trainer(Callable[[BatchEncoding, BatchEncoding], PreTrainedModel]):
+class Trainer:
     model: PreTrainedModel
     training_args: TrainingArguments
 

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import field
 from typing import Any, Dict, List, Tuple
 
@@ -21,7 +20,7 @@ class EncoderConfig:
 
 
 @dataclass(frozen=True)
-class Encoder(Callable[[List[str], List[str]], Tuple[BatchEncoding, BatchEncoding]]):
+class Encoder:
     tokenizer: PreTrainedTokenizer
     parameters: Dict[str, Any]
 

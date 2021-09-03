@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import math
 import random
-from collections.abc import Callable
 from typing import List, Tuple, TypeVar
 
 from pydantic import validator
@@ -39,7 +38,7 @@ class SplitterConfig:
 
 
 @dataclass(frozen=True)
-class Splitter(Callable[List[T], Tuple[List[T], List[T]]]):
+class Splitter:
     ratio: float
 
     def __call__(self, data: List[T] = None) -> Tuple[List[T], List[T]]:

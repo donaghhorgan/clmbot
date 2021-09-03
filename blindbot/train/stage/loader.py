@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pathlib
-from collections.abc import Callable
 from typing import Dict, List
 
 from pydantic.dataclasses import dataclass
@@ -23,7 +22,7 @@ class LoaderConfig:
 
 
 @dataclass(frozen=True)
-class Loader(Callable[[], List[str]]):
+class Loader:
     path: pathlib.Path
     pattern: str
 
