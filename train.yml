@@ -27,4 +27,4 @@ training_args:
   logging_strategy: epoch
   save_strategy: epoch
   warmup_ratio: 0.2
-  learning_rate: 0.001
+  learning_rate: 0.000001
