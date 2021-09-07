@@ -1,4 +1,5 @@
 import pathlib
+
 from blindbot.train import Config
 
 
