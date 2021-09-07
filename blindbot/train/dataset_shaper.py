@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 import random
-from typing import Dict, List, Tuple, TypeVar
+from typing import List, Tuple, TypeVar
 
 import torch.utils.data
 from pydantic.dataclasses import dataclass

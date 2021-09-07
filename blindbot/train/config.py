@@ -34,6 +34,7 @@ class TokenizerConfig(BaseConfig):
 class DatasetConfig(BaseConfig):
     p_train: float
 
+    @classmethod
     @validator("p_train", always=True)
     def validate_p_train(cls, p_train):
         if p_train < 0.0 or p_train > 1.0:
