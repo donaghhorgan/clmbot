@@ -9,5 +9,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build --build-arg PIPENV_DEV=true -t $GITHUB_REPOSITORY:$GITHUB_SHA .
+
       - name: Run unit tests
-        run: pipenv run pytest .
+        run: docker run --rm --entrypoint=python $GITHUB_REPOSITORY:$GITHUB_SHA -m pytest
