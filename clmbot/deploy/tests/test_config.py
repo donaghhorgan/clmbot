@@ -1,7 +1,7 @@
 import pathlib
 
-from blindbot.deploy import Client, DeployConfig
-from blindbot.deploy.client import CLIClient
+from clmbot.deploy import Client, DeployConfig
+from clmbot.deploy.client import CLIClient
 
 
 def test_load_from_config():

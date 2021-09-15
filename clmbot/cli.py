@@ -1,9 +1,9 @@
 import pathlib
 
-import blindbot.logging as logging
+import clmbot.logging as logging
 import typer
-from blindbot.deploy import Client, DeployConfig
-from blindbot.train import Pipeline, TrainConfig
+from clmbot.deploy import Client, DeployConfig
+from clmbot.train import Pipeline, TrainConfig
 
 cli = typer.Typer()
 

@@ -2,8 +2,8 @@ import logging
 from dataclasses import dataclass
 from typing import Any, Dict
 
-from blindbot.train.config import TrainConfig
-from blindbot.util.timer import Timer
+from clmbot.train.config import TrainConfig
+from clmbot.util.timer import Timer
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,

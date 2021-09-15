@@ -4,7 +4,7 @@ import pathlib
 from dataclasses import field
 from typing import Any, Dict
 
-from blindbot.util.config import Config
+from clmbot.util.config import Config
 from pydantic import validator
 from pydantic.dataclasses import dataclass
 

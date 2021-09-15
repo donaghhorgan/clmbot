@@ -4,8 +4,8 @@ import pathlib
 from dataclasses import field
 from typing import Any, Dict
 
-from blindbot.train.config import TokenizerConfig
-from blindbot.util.config import Config
+from clmbot.train.config import TokenizerConfig
+from clmbot.util.config import Config
 from pydantic.dataclasses import dataclass
 
 

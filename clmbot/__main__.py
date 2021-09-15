@@ -1,4 +1,4 @@
-from blindbot.cli import cli
+from clmbot.cli import cli
 
 if __name__ == "__main__":
     cli()

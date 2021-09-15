@@ -1,6 +1,6 @@
 import pathlib
 
-from blindbot.train import Pipeline, TrainConfig
+from clmbot.train import Pipeline, TrainConfig
 
 
 def test_load_from_config():
