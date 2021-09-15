@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 def load_documents(path: pathlib.Path, pattern: str) -> Dict[str, str]:
     documents = {}
-    for file in path.glob(pattern):
+    for file in path.rglob(pattern):
         title = file.stem
         with file.open() as fp:
             documents[title] = fp.read()
