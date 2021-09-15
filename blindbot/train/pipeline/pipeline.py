@@ -1,33 +1,33 @@
 import logging
+from dataclasses import dataclass
+from typing import Any, Dict
 
-from blindbot.util import Timer
+from blindbot.train.config import TrainConfig
+from blindbot.util.timer import Timer
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     DataCollatorForLanguageModeling,
+    PreTrainedModel,
+    PreTrainedTokenizer,
     Trainer,
     TrainingArguments,
 )
 
-from .config import Config
 from .data_loader import DataLoader
 from .dataset_shaper import DatasetShaper
 
 logger = logging.getLogger(__name__)
 
 
+@dataclass(frozen=True)
 class Pipeline:
-    def __init__(self, config: Config):
-        self.data_loader = DataLoader(**config.input.to_dict())
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            config.tokenizer.type, **config.tokenizer.parameters
-        )
-        self.encoding_args = config.encoding_args
-        self.dataset_shaper = DatasetShaper(**config.dataset.to_dict())
-        self.model = AutoModelForCausalLM.from_pretrained(
-            config.model.type, **config.model.parameters
-        )
-        self.training_args = TrainingArguments(**config.training_args)
+    data_loader: DataLoader
+    tokenizer: PreTrainedTokenizer
+    encoding_args: Dict[str, Any]
+    dataset_shaper: DatasetShaper
+    model: PreTrainedModel
+    training_args: TrainingArguments
 
     def __call__(self):
         with Timer() as timer:
@@ -61,3 +61,18 @@ class Pipeline:
         with Timer() as timer:
             trainer.save_model()
         logger.info(f"Saved model in {timer.duration:.2f} seconds")
+
+    @classmethod
+    def from_config(cls, config: TrainConfig):
+        return cls(
+            data_loader=DataLoader(**config.input.to_dict()),
+            tokenizer=AutoTokenizer.from_pretrained(
+                config.tokenizer.type, **config.tokenizer.parameters
+            ),
+            encoding_args=config.encoding_args,
+            dataset_shaper=DatasetShaper(**config.dataset.to_dict()),
+            model=AutoModelForCausalLM.from_pretrained(
+                config.model.type, **config.model.parameters
+            ),
+            training_args=TrainingArguments(**config.training_args),
+        )
