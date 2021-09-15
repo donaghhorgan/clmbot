@@ -1,28 +1,43 @@
+defaults:
+  env:
+    GIT_REF: develop
+  resources:
+    instance-type: P6000
+
+inputs:
+  data:
+    type: dataset
+    with:
+      ref: clmbot-data
+
 jobs:
-  CloneRepo:
-    resources:
-      instance-type: C5
+  clone-repo:
     outputs:
       repo:
         type: volume
     uses: git-checkout@v1
     with:
-      url: https://github.com/donaghhorgan/blindbot
+      url: https://github.com/donaghhorgan/clmbot
+      ref: $GIT_REF
       username: donaghhorgan
       password: secret:GITHUB_PASSWORD
 
-  TrainModel:
-    resources:
-      instance-type: C5
+  train-model:
     needs:
-      - CloneRepo
+      - clone-repo
     inputs:
-      repo: CloneRepo.outputs.repo
+      repo: clone-repo.outputs.repo
+      data: workflow.inputs.data
+    outputs:
+      models:
+        type: dataset
+        with:
+          ref: clmbot-models
     uses: script@v1
     with:
       script: |-
-        cd /input/repo
+        cd /inputs/repo
         python -m pip install pipenv==2021.5.29
-        pipenv install
-        python -c "import torch; print(torch.__version__)"
+        pipenv install --deploy
+        pipenv run python -m clmbot train
       image: nvcr.io/nvidia/pytorch:21.02-py3
