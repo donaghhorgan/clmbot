@@ -3,9 +3,7 @@ client:
   parameters: {}
 
 tokenizer:
-  type: gpt2
-  parameters:
-    pad_token: "50256"
+  path: ./results/model/
 
 model:
   path: ./results/model/

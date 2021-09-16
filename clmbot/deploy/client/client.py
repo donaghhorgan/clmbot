@@ -26,9 +26,7 @@ class Client(ABC):
         return client(
             pipeline=TextGenerationPipeline(
                 model=AutoModelForCausalLM.from_pretrained(config.model.path),
-                tokenizer=AutoTokenizer.from_pretrained(
-                    config.tokenizer.type, **config.tokenizer.parameters
-                ),
+                tokenizer=AutoTokenizer.from_pretrained(config.tokenizer.path),
             ),
             generation_args=config.generation_args,
             **config.client.parameters
