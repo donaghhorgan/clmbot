@@ -1,21 +1,15 @@
-input:
-  path: /inputs/data
-  pattern: "*.txt"
-  sep: "\n"
-
 dataset:
+  path: ./data
+  type: text
   p_train: 0.8
+  parameters:
+    keep_linebreaks: True
 
 tokenizer:
   type: gpt2
-  parameters:
-    use_fast: False
-
-encoding_args: {}
 
 model:
   type: distilgpt2
-  parameters: {}
 
 training_args:
   output_dir: /outputs/models

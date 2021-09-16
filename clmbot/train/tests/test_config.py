@@ -9,8 +9,8 @@ def test_load_from_config():
     pipeline = Pipeline.from_config(config)
 
     assert isinstance(pipeline, Pipeline)
-    assert str(pipeline.data_loader.path) == "/inputs/data"
-    assert pipeline.dataset_shaper.p_train == 0.8
+    assert str(pipeline.dataset_loader.path) == "/inputs/data"
+    assert pipeline.dataset_loader.p_train == 0.8
     assert pipeline.encoding_args == {}
     assert getattr(pipeline.tokenizer, "name_or_path") == "gpt2"
     assert getattr(pipeline.model, "name_or_path") == "gpt2"

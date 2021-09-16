@@ -8,23 +8,15 @@ from clmbot.util.config import Config
 from pydantic import validator
 from pydantic.dataclasses import dataclass
 
-
-@dataclass(frozen=True)
-class DataLoaderConfig(Config):
-    path: pathlib.Path
-    pattern: str = "*.txt"
-    sep: str = "\n"
-
-
-@dataclass(frozen=True)
-class TokenizerConfig(Config):
-    type: str
-    parameters: Dict[str, Any] = field(default_factory=dict)
+from .datasets import TYPES
 
 
 @dataclass(frozen=True)
 class DatasetConfig(Config):
-    p_train: float
+    path: pathlib.Path
+    type: str = "text"
+    p_train: float = 0.8
+    parameters: Dict[str, Any] = field(default_factory=dict)
 
     @classmethod
     @validator("p_train", always=True)
@@ -35,6 +27,21 @@ class DatasetConfig(Config):
             )
         return p_train
 
+    @classmethod
+    @validator("type", always=True)
+    def validate_type(cls, type_):
+        if type_ not in TYPES:
+            raise ValueError(
+                f'Unsupported dataset type "{type_}", should be one of: {TYPES}'
+            )
+        return type_
+
+
+@dataclass(frozen=True)
+class TokenizerConfig(Config):
+    type: str
+    parameters: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass(frozen=True)
 class ModelConfig(Config):
@@ -44,9 +51,8 @@ class ModelConfig(Config):
 
 @dataclass(frozen=True)
 class TrainConfig(Config):
-    input: DataLoaderConfig
-    tokenizer: TokenizerConfig
     dataset: DatasetConfig
+    tokenizer: TokenizerConfig
     model: ModelConfig
     encoding_args: Dict[str, Any] = field(default_factory=dict)
     training_args: Dict[str, Any] = field(default_factory=dict)

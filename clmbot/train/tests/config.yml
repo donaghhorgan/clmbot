@@ -1,9 +1,5 @@
-input:
-  path: /inputs/data
-  pattern: "*.txt"
-  sep: "\n"
-
 dataset:
+  path: /inputs/data
   p_train: 0.8
 
 tokenizer:
