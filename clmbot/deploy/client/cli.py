@@ -14,7 +14,7 @@ class CLIClient(Client):
         while True:
             print(self.separator)
             prompt = input(self.input_prefix)
-            response = self.pipeline(prompt, generate_kwargs=self.generation_args)[0][
+            response = self.pipeline(prompt, **self.generation_args)[0][
                 "generated_text"
             ]
             print(self.output_prefix + response)
