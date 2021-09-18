@@ -43,7 +43,7 @@ class Pipeline:
             text_col = dataset["train"].column_names[0]
             with self.training_args.main_process_first(desc="Encoding dataset"):
                 dataset = dataset.map(
-                    lambda batch: self.tokenize(batch, text_col),
+                    lambda batch: self.encode(batch, text_col),
                     batched=True,
                     remove_columns=text_col,
                     desc="Encoding dataset",
@@ -86,7 +86,7 @@ class Pipeline:
             trainer.save_metrics("eval", eval_metrics)
         logger.info(f"Saved metrics in {timer.duration:.2f} seconds")
 
-    def tokenize(self, batch, text_col: str):
+    def encode(self, batch, text_col: str):
         encodings = self.tokenizer(batch[text_col], **self.encoding_args)
         encodings["labels"] = encodings["input_ids"].copy()
         return encodings
