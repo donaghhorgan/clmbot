@@ -12,9 +12,12 @@ class CLIClient(Client):
 
     def __call__(self):
         while True:
-            print(self.separator)
-            prompt = input(self.input_prefix)
-            response = self.pipeline(prompt, **self.generation_args)[0][
-                "generated_text"
-            ]
-            print(self.output_prefix + response)
+            try:
+                print(self.separator)
+                prompt = input(self.input_prefix)
+                response = self.pipeline(prompt, **self.generation_args)[0][
+                    "generated_text"
+                ]
+                print(self.output_prefix + response)
+            except KeyboardInterrupt:
+                break
