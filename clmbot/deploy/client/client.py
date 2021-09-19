@@ -25,7 +25,9 @@ class Client(ABC):
         client = get_module_type(clmbot.deploy.client, config.client.type, Client)
         return client(
             pipeline=TextGenerationPipeline(
-                model=AutoModelForCausalLM.from_pretrained(config.model.path),
+                model=AutoModelForCausalLM.from_pretrained(
+                    config.model.path.expanduser()
+                ),
                 tokenizer=AutoTokenizer.from_pretrained(
                     config.tokenizer.type, **config.tokenizer.parameters
                 ),
