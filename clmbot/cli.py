@@ -2,10 +2,28 @@ import pathlib
 
 import clmbot.logging as logging
 import typer
-from clmbot.deploy import Client, DeployConfig
+from clmbot.deploy import Client, ClientConfig, DeployConfig
 from clmbot.train import Pipeline, TrainConfig
 
-cli = typer.Typer()
+app = typer.Typer()
+
+TRAIN_CONFIG_FILE = typer.Option(
+    "train.yml",
+    "--config",
+    "-c",
+    help="The configuration file to use.",
+    exists=True,
+    dir_okay=False,
+)
+
+DEPLOY_CONFIG_FILE = typer.Option(
+    "deploy.yml",
+    "--config",
+    "-c",
+    help="The configuration file to use.",
+    exists=True,
+    dir_okay=False,
+)
 
 LOG_LEVEL = typer.Option(
     logging.LogLevel.info,
@@ -15,16 +33,9 @@ LOG_LEVEL = typer.Option(
 )
 
 
-@cli.command(help="Train a new model.")
+@app.command(help="Train a model.")
 def train(
-    config_file: pathlib.Path = typer.Option(
-        "train.yml",
-        "--config",
-        "-c",
-        help="The configuration file to use.",
-        exists=True,
-        dir_okay=False,
-    ),
+    config_file: pathlib.Path = TRAIN_CONFIG_FILE,
     log_level: logging.LogLevel = LOG_LEVEL,
 ):
     logging.basicConfig(log_level)
@@ -35,21 +46,31 @@ def train(
     pipeline()
 
 
-@cli.command(help="Deploy a model.")
+@app.command(help="Deploy a model.")
 def deploy(
-    config_file: pathlib.Path = typer.Option(
-        "deploy.yml",
-        "--config",
-        "-c",
-        help="The configuration file to use.",
-        exists=True,
-        dir_okay=False,
-    ),
+    config_file: pathlib.Path = DEPLOY_CONFIG_FILE,
     log_level: logging.LogLevel = LOG_LEVEL,
 ):
     logging.basicConfig(log_level)
 
     config = DeployConfig.from_yaml(config_file)
+    client = Client.from_config(config)
+
+    client()
+
+
+@app.command(help="Deploy a model CLI.")
+def cli(
+    config_file: pathlib.Path = DEPLOY_CONFIG_FILE,
+    log_level: logging.LogLevel = LOG_LEVEL,
+):
+    logging.basicConfig(log_level)
+
+    config = DeployConfig.from_yaml(config_file)
+
+    # Patch the config, replacing the client
+    object.__setattr__(config, "client", ClientConfig(type="cli"))
+
     client = Client.from_config(config)
 
     client()

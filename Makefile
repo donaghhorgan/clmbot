@@ -10,9 +10,9 @@ clean:
 train:
 	pipenv run gradient workflows run --id ${GRADIENT_TRAIN_WORKFLOW_ID} --path ./.gradient/workflows/train.yml
 
-.PHONY: deploy
-deploy:
-	python -m clmbot deploy
+.PHONY: deploy cli
+deploy cli:
+	python -m clmbot $@
 
 .PHONY: test
 test: coverage lint regression

@@ -1,4 +1,4 @@
-from clmbot.cli import cli
+from clmbot.cli import app
 
 if __name__ == "__main__":
-    cli()
+    app()

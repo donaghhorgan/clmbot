@@ -1,4 +1,4 @@
 from .client import Client
-from .config import DeployConfig
+from .config import ClientConfig, DeployConfig
 
-__all__ = ["DeployConfig", "Client"]
+__all__ = ["Client", "ClientConfig", "DeployConfig"]
