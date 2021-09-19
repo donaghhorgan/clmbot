@@ -2,7 +2,7 @@ client:
   type: cli
 
 tokenizer:
-  path: gpt2
+  type: gpt2
 
 model:
   path: gpt2
