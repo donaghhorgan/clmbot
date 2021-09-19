@@ -1,6 +1,6 @@
 import pathlib
 
-import clmbot.logging as logging
+import clmbot.util.logging as logging
 import typer
 from clmbot.deploy import Client, ClientConfig, DeployConfig
 from clmbot.train import Pipeline, TrainConfig
