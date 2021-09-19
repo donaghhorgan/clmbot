@@ -8,7 +8,21 @@ clean:
 
 .PHONY: train
 train:
-	pipenv run gradient workflows run --id ${GRADIENT_TRAIN_WORKFLOW_ID} --path ./.gradient/workflows/train.yml
+	pipenv run gradient workflows run \
+		--id ${GRADIENT_TRAIN_WORKFLOW_ID} \
+		--path ./.gradient/workflows/train.yml
+
+.PHONY: fetch
+fetch: path = ${HOME}/.clmbot/model/
+fetch:
+	@mkdir -p "$(path)"
+	@declare -a files=( config.json pytorch_model.bin ); \
+    for file in "$${files[@]}" ; do \
+		pipenv run gradient datasets files get \
+			--id "${GRADIENT_MODEL_DATASET_ID}:latest" \
+			--source-path "$${file}" \
+			--target-path "$(path)$${file}"; \
+    done
 
 .PHONY: deploy cli
 deploy cli:
