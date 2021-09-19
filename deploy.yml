@@ -1,15 +1,17 @@
 client:
   type: cli
-  parameters: {}
 
 tokenizer:
-  path: ./results/model/
+  type: EleutherAI/gpt-neo-125M
+  parameters:
+    pad_token: <|endoftext|>
 
 model:
-  path: ./results/model/
+  path: "~/.clmbot/model/"
 
 generation_args:
   do_sample: True
-  min_length: 1024
-  top_k: 15
+  min_length: 512
+  max_length: 1024
+  top_k: 50
   top_p: 0.95
