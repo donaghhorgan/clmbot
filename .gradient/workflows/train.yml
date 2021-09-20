@@ -1,6 +1,6 @@
 defaults:
   env:
-    GIT_REF: develop
+    GIT_REF: v0.1.0
   resources:
     instance-type: P6000
 
@@ -23,8 +23,6 @@ jobs:
     with:
       url: https://github.com/donaghhorgan/clmbot
       ref: $GIT_REF
-      username: donaghhorgan
-      password: secret:GITHUB_PASSWORD
 
   train-model:
     needs:
