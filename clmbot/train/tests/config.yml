@@ -1,0 +1,14 @@
+dataset:
+  path: /inputs/data
+  p_train: 0.8
+
+tokenizer:
+  type: gpt2
+  parameters:
+    use_fast: False
+
+model:
+  type: gpt2
+
+training_args:
+  output_dir: /outputs/model

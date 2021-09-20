@@ -1,38 +1,22 @@
 from __future__ import annotations
 
-import dataclasses
 import pathlib
-from abc import ABC
 from dataclasses import field
 from typing import Any, Dict
 
-import yaml
+from clmbot.util.config import Config
 from pydantic import validator
 from pydantic.dataclasses import dataclass
 
-
-@dataclass(frozen=True)
-class BaseConfig(ABC):
-    def to_dict(self) -> Dict[str, Any]:
-        return dataclasses.asdict(self)
+from .datasets import TYPES
 
 
 @dataclass(frozen=True)
-class DataLoaderConfig(BaseConfig):
+class DatasetConfig(Config):
     path: pathlib.Path
-    pattern: str = "*.txt"
-    sep: str = "\n"
-
-
-@dataclass(frozen=True)
-class TokenizerConfig(BaseConfig):
-    type: str
+    type: str = "text"
+    p_train: float = 0.8
     parameters: Dict[str, Any] = field(default_factory=dict)
-
-
-@dataclass(frozen=True)
-class DatasetConfig(BaseConfig):
-    p_train: float
 
     @classmethod
     @validator("p_train", always=True)
@@ -43,29 +27,32 @@ class DatasetConfig(BaseConfig):
             )
         return p_train
 
+    @classmethod
+    @validator("type", always=True)
+    def validate_type(cls, type_):
+        if type_ not in TYPES:
+            raise ValueError(
+                f'Unsupported dataset type "{type_}", should be one of: {TYPES}'
+            )
+        return type_
+
 
 @dataclass(frozen=True)
-class ModelConfig(BaseConfig):
+class TokenizerConfig(Config):
     type: str
     parameters: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
-class Config(BaseConfig):
-    input: DataLoaderConfig
-    tokenizer: TokenizerConfig
-    dataset: DatasetConfig
-    model: ModelConfig
+class ModelConfig(Config):
+    type: str
+    parameters: Dict[str, Any] = field(default_factory=dict)
 
+
+@dataclass(frozen=True)
+class TrainConfig(Config):
+    dataset: DatasetConfig
+    tokenizer: TokenizerConfig
+    model: ModelConfig
     encoding_args: Dict[str, Any] = field(default_factory=dict)
     training_args: Dict[str, Any] = field(default_factory=dict)
-
-    @classmethod
-    def from_yaml(cls, file: pathlib.Path) -> Config:
-        with file.open() as fp:
-            config = yaml.safe_load(fp)
-
-        if not config:
-            raise ValueError(f"The configuration in {file} is empty")
-
-        return cls(**config)
