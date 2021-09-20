@@ -20,8 +20,6 @@ from .dataset_loader import DatasetLoader
 
 logger = logging.getLogger(__name__)
 
-MAX_BLOCK_SIZE = 1024
-
 
 @dataclass(frozen=True)
 class Pipeline:
@@ -51,7 +49,7 @@ class Pipeline:
         logger.info(f"Encoded dataset in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
-            block_size = min(MAX_BLOCK_SIZE, self.tokenizer.model_max_length)
+            block_size = self.tokenizer.model_max_length
             with self.training_args.main_process_first(desc="Reshaping dataset"):
                 dataset = dataset.map(
                     lambda batch: self.reshape(batch, block_size),
