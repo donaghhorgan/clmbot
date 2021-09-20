@@ -30,7 +30,7 @@ Training with [Gradient](https://gradient.run/) is a simple and free way to get 
 6. Upload one or more `.txt` files to the `clmbot-data` dataset.
 7. In a terminal, set the environment variable `GRADIENT_TRAIN_WORKFLOW_ID` to the ID of your Gradient workflow. Then, run `make train` to start training.
 8. Wait until training has completed.
-9. In a terminal, set the environment variable `GRADIENT_MODEL_DATASET_ID` to the ID of the `clmbot-models` dataset (run `gradient datasets list` to see the IDs of your datasets). Then, run `make fetch` to download the trained model to your local machine. 
+9. In a terminal, set the environment variable `GRADIENT_MODEL_DATASET_ID` to the ID of the `clmbot-models` dataset (run `gradient datasets list` to see the IDs of your datasets). Then, run `make fetch` to download the trained model to your local machine.
 
 ### Train with Python
 

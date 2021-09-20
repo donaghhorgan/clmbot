@@ -39,4 +39,4 @@ def multiline_input(prompt: str) -> str:
             lines.append(input())
         except EOFError:
             break
-    return '\n'.join(lines)
+    return "\n".join(lines)
