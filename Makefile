@@ -3,8 +3,13 @@ SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 
 ### Development tasks ###
+.PHONY: build
+build:
+	docker build -t clmbot .
+
 .PHONY: clean
 clean:
+	docker rmi clmbot
 
 .PHONY: train
 train:
