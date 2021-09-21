@@ -24,12 +24,8 @@ class Client(ABC):
     def from_config(cls, config: DeployConfig) -> Client:
         client = get_module_type(clmbot.deploy.client, config.client.type, Client)
 
-        tokenizer = AutoTokenizer.from_pretrained(
-            config.tokenizer.type, **config.tokenizer.parameters
-        )
-
+        tokenizer = AutoTokenizer.from_pretrained(config.tokenizer.path.expanduser())
         model = AutoModelForCausalLM.from_pretrained(config.model.path.expanduser())
-
         pipeline = TextGenerationPipeline(model=model, tokenizer=tokenizer,)
 
         if pipeline.model.config.pad_token_id is None:

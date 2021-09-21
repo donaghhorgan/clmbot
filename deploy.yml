@@ -2,9 +2,7 @@ client:
   type: cli
 
 tokenizer:
-  type: EleutherAI/gpt-neo-125M
-  parameters:
-    pad_token: <|endoftext|>
+  path: "~/.clmbot/model/"
 
 model:
   path: "~/.clmbot/model/"

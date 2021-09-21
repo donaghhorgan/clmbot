@@ -4,7 +4,6 @@ import pathlib
 from dataclasses import field
 from typing import Any, Dict
 
-from clmbot.train.config import TokenizerConfig
 from clmbot.util.config import Config
 from pydantic.dataclasses import dataclass
 
@@ -13,6 +12,11 @@ from pydantic.dataclasses import dataclass
 class ClientConfig(Config):
     type: str
     parameters: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class TokenizerConfig(Config):
+    path: pathlib.Path
 
 
 @dataclass(frozen=True)
