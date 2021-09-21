@@ -71,6 +71,7 @@ class Pipeline:
         logger.info(f"Trained model in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
+            self.tokenizer.save_pretrained(self.training_args.output_dir)
             trainer.save_model()
         logger.info(f"Saved model in {timer.duration:.2f} seconds")
 
