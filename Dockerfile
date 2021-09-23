@@ -13,8 +13,7 @@ COPY Pipfile Pipfile.lock ./
 # TODO: Stop ignoring when hadolint/hadolint#511 is resolved
 # hadolint ignore=DL3013,DL3042
 RUN pip install --no-cache-dir pipenv==2021.5.29 && \
-    pipenv install --system --deploy && \
-    mkdir -p "/root/.cache/black/19.10b0"  # Temporary workaround for psf/black#1143
+    pipenv install --system --deploy
 
 # Copy config and code
 COPY clmbot clmbot/
