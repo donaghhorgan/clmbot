@@ -26,6 +26,7 @@ class Pipeline:
     dataset_loader: DatasetLoader
     tokenizer: PreTrainedTokenizer
     encoding_args: Dict[str, Any]
+    block_size: int
     model: PreTrainedModel
     training_args: TrainingArguments
 
@@ -49,7 +50,7 @@ class Pipeline:
         logger.info(f"Encoded dataset in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
-            block_size = self.tokenizer.model_max_length
+            block_size = self.tokenizer.model_max_length if self.block_size is None else self.block_size
             with self.training_args.main_process_first(desc="Reshaping dataset"):
                 dataset = dataset.map(
                     lambda batch: self.reshape(batch, block_size),
@@ -114,6 +115,7 @@ class Pipeline:
                 config.tokenizer.type, **config.tokenizer.parameters
             ),
             encoding_args=config.encoding_args,
+            block_size=config.block_size,
             model=AutoModelForCausalLM.from_pretrained(
                 config.model.type,
                 config=AutoConfig.from_pretrained(config.model.type),
