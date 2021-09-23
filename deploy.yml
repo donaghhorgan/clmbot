@@ -1,6 +1,9 @@
 client:
   type: gradio
   parameters:
+    interface_args:
+      title: clmbot
+      description: A causal language model bot
     launch_args:
       inbrowser: True
 
