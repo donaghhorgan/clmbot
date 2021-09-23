@@ -20,9 +20,7 @@ class CLIClient(Client):
                 prompt = input_func(self.input_prefix)
                 print(self.separator)
                 print(self.output_prefix)
-                response = self.pipeline(prompt, **self.generation_args)[0][
-                    "generated_text"
-                ]
+                response = self.generate(prompt)
                 print(response)
             except KeyboardInterrupt:
                 break

@@ -1,17 +1,17 @@
 client:
-  type: cli
-
-tokenizer:
-  type: EleutherAI/gpt-neo-125M
+  type: gradio
   parameters:
-    pad_token: <|endoftext|>
+    interface_args:
+      title: clmbot
+      description: A causal language model bot
+    launch_args:
+      inbrowser: True
 
 model:
   path: "~/.clmbot/model/"
 
 generation_args:
-  do_sample: True
-  min_length: 512
-  max_length: 1024
+  min_length: 100
+  max_length: 500
   top_k: 50
   top_p: 0.95

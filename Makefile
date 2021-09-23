@@ -21,7 +21,7 @@ train:
 fetch: path = ${HOME}/.clmbot/model/
 fetch:
 	@mkdir -p "$(path)"
-	@declare -a files=( config.json pytorch_model.bin ); \
+	@declare -a files=( config.json merges.txt pytorch_model.bin special_tokens_map.json tokenizer_config.json tokenizer.json vocab.json ); \
     for file in "$${files[@]}" ; do \
 		pipenv run gradient datasets files get \
 			--id "${GRADIENT_MODEL_DATASET_ID}:latest" \
