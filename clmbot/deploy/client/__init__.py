@@ -1,6 +1,6 @@
 from .cli import CLIClient
-from .gradio import GradioClient
 from .client import Client
+from .gradio import GradioClient
 
 gradio = Gradio = GradioClient
 cli = CLI = CLIClient

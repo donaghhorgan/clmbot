@@ -50,7 +50,11 @@ class Pipeline:
         logger.info(f"Encoded dataset in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
-            block_size = self.tokenizer.model_max_length if self.block_size is None else self.block_size
+            block_size = (
+                self.tokenizer.model_max_length
+                if self.block_size is None
+                else self.block_size
+            )
             with self.training_args.main_process_first(desc="Reshaping dataset"):
                 dataset = dataset.map(
                     lambda batch: self.reshape(batch, block_size),

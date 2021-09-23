@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
-
-from .client import Client
-from typing import Dict, Any
+from typing import Any, Dict
 
 import gradio as gr
 import gradio.inputs
 import gradio.outputs
+
+from .client import Client
 
 
 @dataclass(frozen=True)
@@ -23,12 +23,7 @@ class GradioClient(Client):
                     placeholder="Write a prompt for the model to process",
                 )
             ],
-            outputs=[
-                gradio.outputs.Textbox(
-                    label="response",
-                    type="str"
-                )
-            ],
+            outputs=[gradio.outputs.Textbox(label="response", type="str")],
             **self.interface_args
         )
         interface.launch(**self.launch_args)

@@ -1,14 +1,13 @@
 from __future__ import annotations
 
+import json
+import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Dict, Optional
-import json
-
-import requests
-import logging
 
 import clmbot.deploy.client
+import requests
 from clmbot.util.importlib import get_module_type
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextGenerationPipeline
 
@@ -26,7 +25,9 @@ class Client(ABC):
     def generate(self, prompt: str = None) -> str:
         try:
             if self.pipeline is not None:
-                return self.pipeline(prompt, **self.generation_args)[0]["generated_text"]
+                return self.pipeline(prompt, **self.generation_args)[0][
+                    "generated_text"
+                ]
             elif self.api is not None:
                 if not prompt:
                     return ""
@@ -34,16 +35,14 @@ class Client(ABC):
                 response = requests.request(
                     "POST",
                     self.api.url,
-                    headers={
-                        "Authorization": f"Bearer {self.api.token}"
-                    },
+                    headers={"Authorization": f"Bearer {self.api.token}"},
                     data=json.dumps(
                         {
                             "inputs": prompt,
                             "parameters": self.generation_args,
-                            "options": self.api.options
+                            "options": self.api.options,
                         }
-                    )
+                    ),
                 )
 
                 response.raise_for_status()
@@ -82,5 +81,5 @@ class Client(ABC):
             pipeline=pipeline,
             api=config.model.api,
             generation_args=config.generation_args,
-            **config.client.parameters
+            **config.client.parameters,
         )
