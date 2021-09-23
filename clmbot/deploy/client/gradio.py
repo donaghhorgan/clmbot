@@ -12,6 +12,7 @@ class GradioClient(Client):
     launch_args: Dict[str, Any] = field(default_factory=dict)
 
     def __call__(self):
+        # pylint: disable=no-member
         interface = gr.Interface(
             fn=lambda prompt: self.generate(prompt),
             inputs=[
