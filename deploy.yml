@@ -1,15 +1,14 @@
 client:
-  type: cli
-
-tokenizer:
-  path: "~/.clmbot/model/"
+  type: gradio
+  parameters:
+    launch_args:
+      inbrowser: True
 
 model:
   path: "~/.clmbot/model/"
 
 generation_args:
-  do_sample: True
-  min_length: 512
-  max_length: 1024
+  min_length: 100
+  max_length: 500
   top_k: 50
   top_p: 0.95
