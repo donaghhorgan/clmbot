@@ -55,5 +55,6 @@ class TrainConfig(Config):
     tokenizer: TokenizerConfig
     model: ModelConfig
     block_size: int = None
+    freeze_model: bool = False
     encoding_args: Dict[str, Any] = field(default_factory=dict)
     training_args: Dict[str, Any] = field(default_factory=dict)

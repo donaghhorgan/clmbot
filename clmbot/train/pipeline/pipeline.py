@@ -26,6 +26,7 @@ class Pipeline:
     dataset_loader: DatasetLoader
     tokenizer: PreTrainedTokenizer
     encoding_args: Dict[str, Any]
+    freeze_model: bool
     block_size: int
     model: PreTrainedModel
     training_args: TrainingArguments
@@ -64,6 +65,10 @@ class Pipeline:
         logger.info(f"Reshaped dataset in {timer.duration:.2f} seconds")
 
         with Timer() as timer:
+            if self.freeze_model:
+                for parameter in self.model.base_model.parameters():
+                    parameter.requires_grad = False
+
             trainer = Trainer(
                 model=self.model,
                 args=self.training_args,
@@ -120,6 +125,7 @@ class Pipeline:
             ),
             encoding_args=config.encoding_args,
             block_size=config.block_size,
+            freeze_model=config.freeze_model,
             model=AutoModelForCausalLM.from_pretrained(
                 config.model.type,
                 config=AutoConfig.from_pretrained(config.model.type),
