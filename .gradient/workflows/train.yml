@@ -1,46 +1,36 @@
-defaults:
-  env:
-    GIT_REF: v0.2.0
-  resources:
-    instance-type: P6000
-
-inputs:
-  config:
-    type: dataset
-    with:
-      ref: clmbot-config
-  data:
-    type: dataset
-    with:
-      ref: clmbot-data
-
 jobs:
   clone-repo:
-    outputs:
-      repo:
-        type: volume
     uses: git-checkout@v1
     with:
       url: https://github.com/donaghhorgan/clmbot
-      ref: $GIT_REF
+      ref: v0.2.0
+    outputs:
+      repo:
+        type: volume
+    resources:
+      instance-type: C3
 
   train-model:
     needs:
       - clone-repo
-    inputs:
-      repo: clone-repo.outputs.repo
-      config: workflow.inputs.config
-      data: workflow.inputs.data
-    outputs:
-      models:
-        type: dataset
-        with:
-          ref: clmbot-models
     uses: script@v1
     with:
       script: |-
         cd /inputs/repo
         python -m pip install pipenv==2021.5.29
         pipenv install --deploy
-        pipenv run python -m clmbot train -c /inputs/config/train.yml
+        pipenv run python -m clmbot train -c /inputs/repo/train.yml
       image: nvcr.io/nvidia/pytorch:21.02-py3
+    inputs:
+      repo: clone-repo.outputs.repo
+      data:
+        type: dataset
+        with:
+          ref: clmbot-data
+    outputs:
+      models:
+        type: dataset
+        with:
+          ref: clmbot-models
+    resources:
+      instance-type: P5000
