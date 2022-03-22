@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 datasets = "==1.12.1"
-gradio = "==2.3.5"
+gradio = "==2.8.11"
 pydantic = "==1.8.2"
 PyYAML = "==5.4.1"
 requests = "==2.26.0"
